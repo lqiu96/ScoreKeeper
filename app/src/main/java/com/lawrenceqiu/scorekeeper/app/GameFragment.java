@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -33,55 +34,13 @@ public class GameFragment extends ListFragment {
 
     private String gameName;
     private EditText name;
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        playerNames = new ArrayList<>();
-
-        adapter = new PlayerAdapter(getActivity().getApplicationContext(), playerNames);
-        setListAdapter(adapter);
-    }
-
-    /**
-     * Inflates the fragment with the score keeping layout
-     * @param inflater Inflater
-     * @param container Entire group of Views
-     * @param savedInstanceState Bundle of data
-     * @return View that was created
-     */
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_game, container, false);
-    }
-
-    /**
-     * Sets up entire fragment by creating the Player's name and sorting them based on score
-     * Creates functionality for the ImageButton (Gives Listener)
-     * Gives the Listview listeners
-     * @param savedInstanceState Bundle to store the data
-     */
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        name = (EditText) getActivity().findViewById(R.id.enterPlayerName);
-
-        ImageButton addNames = (ImageButton) getActivity().findViewById(R.id.addNames);
-        addNames.setOnClickListener(addPlayerListener);
-
-        getListView().setOnItemClickListener(itemClickListener);
-        getListView().setOnItemLongClickListener(itemLongClickListener);
-    }
-
     /**
      * ImageButton's onClickListener
      * Checks to see if the user had inputted anything
      * If not, create an AlertDialog that informs the user that they must input a name
      * Otherwise it attempts to add the name in
-     *  -If name already exists, it creates a Toast that informs the user to input a different name
-     *  -Otherwise adds the name in and notifies the listview that data has changed
+     * -If name already exists, it creates a Toast that informs the user to input a different name
+     * -Otherwise adds the name in and notifies the listview that data has changed
      */
     private View.OnClickListener addPlayerListener = new View.OnClickListener() {
         @Override
@@ -119,65 +78,56 @@ public class GameFragment extends ListFragment {
             }
         }
     };
-
-    /**
-     * Checks to see if name is already inside the list
-     * @param playerName List of player names
-     * @return If the list contains the new name
-     */
-    private boolean checkIfNameExists(String playerName) {
-        return playerNames.contains(new Player(playerName));
-    }
-
     /**
      * Handles when user taps on the Player's info
      * Creates a custom AlertDialog which allows the ability to change a user's name
      * Dismisses the dialog if user chooses to cancel the action
      * Changes the player's name if the user chooses to change it
-     *  -New name must be inputted. Can't be empty spaces
+     * -New name must be inputted. Can't be empty spaces
      */
     private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            final View customView = inflater.inflate(R.layout.change_name, null);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(getString(R.string.editName))
-                    .setView(customView)
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            EditText editText = (EditText) customView.findViewById(R.id.changedName);
-                            String name = editText.getText().toString();
-                            if (name.length() == 0) {       //Checks to see if anything is inputted
-                                Toast.makeText(getActivity(), R.string.dialog_name_error, Toast.LENGTH_SHORT).show();
-                            } else if (playerNames.get(position).getName().equals(name)) {  //Checks if that is what name is already set as
-                                Toast.makeText(getActivity(), R.string.is_current_name, Toast.LENGTH_SHORT).show();
-                            } else if (checkIfNameExists(name)) {       //Checks if name already exists
-                                Toast.makeText(getActivity(), R.string.name_exists, Toast.LENGTH_SHORT).show();
-                            } else {        //Otherwise add it in
-                                playerNames.get(position).setName(name);
-                                adapter.notifyDataSetChanged();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {    //Can only change name if version code is >20
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                final View customView = inflater.inflate(R.layout.change_name, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(getString(R.string.editName))
+                        .setView(customView)
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                             }
-                        }
-                    });
-            builder.create().show();
-            /* When the user is done inputting the name, removes the keyboard */
-            InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            manager.hideSoftInputFromWindow(name.getWindowToken(), 0);
+                        })
+                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                EditText editText = (EditText) customView.findViewById(R.id.changedName);
+                                String name = editText.getText().toString();
+                                if (name.length() == 0) {       //Checks to see if anything is inputted
+                                    Toast.makeText(getActivity(), R.string.dialog_name_error, Toast.LENGTH_SHORT).show();
+                                } else if (playerNames.get(position).getName().equals(name)) {  //Checks if that is what name is already set as
+                                    Toast.makeText(getActivity(), R.string.is_current_name, Toast.LENGTH_SHORT).show();
+                                } else if (checkIfNameExists(name)) {       //Checks if name already exists
+                                    Toast.makeText(getActivity(), R.string.name_exists, Toast.LENGTH_SHORT).show();
+                                } else {        //Otherwise add it in
+                                    playerNames.get(position).setName(name);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                builder.create().show();
+                /* When the user is done inputting the name, removes the keyboard */
+                InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                manager.hideSoftInputFromWindow(name.getWindowToken(), 0);
+            }
         }
     };
-
     /**
      * Displays a list of options for the user to choose
      * Delete would remove the player from the leader board
-     *  -User must confirm the action in the event of a mis-click
+     * -User must confirm the action in the event of a mis-click
      */
     private AdapterView.OnItemLongClickListener itemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
@@ -229,8 +179,62 @@ public class GameFragment extends ListFragment {
         }
     };
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        playerNames = new ArrayList<>();
+
+        adapter = new PlayerAdapter(getActivity().getApplicationContext(), playerNames);
+        setListAdapter(adapter);
+    }
+
+    /**
+     * Inflates the fragment with the score keeping layout
+     *
+     * @param inflater           Inflater
+     * @param container          Entire group of Views
+     * @param savedInstanceState Bundle of data
+     * @return View that was created
+     */
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_game, container, false);
+    }
+
+    /**
+     * Sets up entire fragment by creating the Player's name and sorting them based on score
+     * Creates functionality for the ImageButton (Gives Listener)
+     * Gives the Listview listeners
+     *
+     * @param savedInstanceState Bundle to store the data
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        name = (EditText) getActivity().findViewById(R.id.enterPlayerName);
+
+        ImageButton addNames = (ImageButton) getActivity().findViewById(R.id.addNames);
+        addNames.setOnClickListener(addPlayerListener);
+
+        getListView().setOnItemClickListener(itemClickListener);
+        getListView().setOnItemLongClickListener(itemLongClickListener);
+    }
+
+    /**
+     * Checks to see if name is already inside the list
+     *
+     * @param playerName List of player names
+     * @return If the list contains the new name
+     */
+    private boolean checkIfNameExists(String playerName) {
+        return playerNames.contains(new Player(playerName));
+    }
+
     /**
      * Gets all the player
+     *
      * @return ArrayList of Players
      */
     public ArrayList<Player> getPlayerNames() {
@@ -240,11 +244,12 @@ public class GameFragment extends ListFragment {
     /**
      * Adds all the new players into the ArrayList storing them
      * As long as there is a player to add, it notifies that the list has changed
+     *
      * @param playerNames List of playerNames to be added in
      */
     public void setPlayerNames(ArrayList<Player> playerNames) {
         this.playerNames.clear();
-        for (Player player: playerNames) {
+        for (Player player : playerNames) {
             this.playerNames.add(player);
         }
         if (!playerNames.isEmpty()) {
@@ -252,11 +257,21 @@ public class GameFragment extends ListFragment {
         }
     }
 
-    public void setGameName(String name) {
-        gameName = name;
-    }
-
+    /**
+     * Gives back the gameFragment's name
+     *
+     * @return gameName
+     */
     public String getGameName() {
         return gameName;
+    }
+
+    /**
+     * Sets the gameName
+     *
+     * @param name Name of the game
+     */
+    public void setGameName(String name) {
+        gameName = name;
     }
 }

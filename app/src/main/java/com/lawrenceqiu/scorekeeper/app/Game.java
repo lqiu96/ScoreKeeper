@@ -142,34 +142,40 @@ public class Game extends AppCompatActivity {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void saveGame() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.save)
-                .setView(R.layout.save_game)
-                .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {   //Negative Button is displayed to the left
-                    @Override
-                    //Cancel should be to the left and default in the middle
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton(R.string.default_name, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Calendar today = Calendar.getInstance();
-                        String now = today.getTime().toString();
-                        save(now);
-                    }
-                })
-                .setPositiveButton(R.string.custom_name, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Dialog dialogView = (Dialog) dialog;        //Some reason this works, but inflating the layout doesn't
-                        EditText name = (EditText) dialogView.findViewById(R.id.game_custom_name);
-                        String fileName = name.getText().toString();
-                        save(fileName);
-                    }
-                });
-        builder.create().show();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) { //setView requires SDK code 20 or above
+            Calendar today = Calendar.getInstance();                //Defaults to saving game as Calender timestamp
+            String now = today.getTime().toString();                //if version number is less
+            save(now);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.save)
+                    .setView(R.layout.save_game)
+                    .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {   //Negative Button is displayed to the left
+                        @Override
+                        //Cancel should be to the left and default in the middle
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(R.string.default_name, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Calendar today = Calendar.getInstance();
+                            String now = today.getTime().toString();
+                            save(now);
+                        }
+                    })
+                    .setPositiveButton(R.string.custom_name, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Dialog dialogView = (Dialog) dialog;        //Some reason this works, but inflating the layout doesn't
+                            EditText name = (EditText) dialogView.findViewById(R.id.game_custom_name);
+                            String fileName = name.getText().toString();
+                            save(fileName);
+                        }
+                    });
+            builder.create().show();
+        }
     }
 
     /**
@@ -193,6 +199,9 @@ public class Game extends AppCompatActivity {
     /**
      * Gets the list of Player objects from the gameFragment and serializes them
      * Each Object is written to the file (Name and Scores)
+     *
+     * Notifies the user with a Toast that file has been saved
+     *
      * @param file File that the directory's absolute path is in
      */
     private void writeToFile(File file) {
@@ -216,5 +225,6 @@ public class Game extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        Toast.makeText(getApplicationContext(), "File saved", Toast.LENGTH_SHORT).show();
     }
 }
