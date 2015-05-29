@@ -164,12 +164,16 @@ public class LoadGame extends ListActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             File[] files = new File(FILE_LOCATION).listFiles();
-                            for (File file : files) {
-                                file.delete();
+                            if (files.length == 0) {
+                                Toast.makeText(getApplicationContext(), R.string.no_files_error, Toast.LENGTH_SHORT).show();
+                            } else {
+                                for (File file : files) {
+                                    file.delete();
+                                }
+                                fileNames.clear();
+                                gameAdapter.notifyDataSetChanged();
+                                Toast.makeText(getApplicationContext(), R.string.all_files_deleted, Toast.LENGTH_SHORT).show();
                             }
-                            fileNames.clear();
-                            gameAdapter.notifyDataSetChanged();
-                            Toast.makeText(getApplicationContext(), "All Files deleted", Toast.LENGTH_SHORT).show();
                         }
                     });
             builder.create().show();
