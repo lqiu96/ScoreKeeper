@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -155,8 +156,15 @@ public class Game extends AppCompatActivity {
             case R.id.update_game:
                 updateGame();
                 break;
+            case R.id.update_settings:
+                updateSettings();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateSettings() {
+        Intent settings = new Intent(this, SettingsActivity.class);
+        startActivity(settings);
     }
 
     /**

@@ -48,6 +48,7 @@
     <string name="numberPlayers">Choose number of players</string>
     <string name="numberPlayers_default">25</string>
     <string name="passed_limit">Exceeded player limit.</string>
+    <string name="limitPlayers">Limit Players</string>
 
     <string-array name="dialogItems">
         <item>Delete</item>
