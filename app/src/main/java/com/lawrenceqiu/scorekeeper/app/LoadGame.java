@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.Toast;
 import com.lawrence.scorekeeper.app.R;
 import com.lawrenceqiu.scorekeeper.app.adapters.GameAdapter;
 
@@ -29,6 +31,8 @@ public class LoadGame extends ListActivity {
     private ArrayList<String> fileNames;
     private GameAdapter gameAdapter;
 
+    private Button deleteAll;
+
     /**
      * Sets up the arrayAdapter for the list and sets up functionality for clicking on the items
      * Gets the list of fileNames
@@ -46,6 +50,9 @@ public class LoadGame extends ListActivity {
 
         getListView().setOnItemClickListener(itemClickListener);
         getListView().setOnItemLongClickListener(itemLongClickListener);
+
+        deleteAll = (Button) findViewById(R.id.deleteAllFiles);
+        deleteAll.setOnClickListener(deleteAllListener);
     }
 
     /**
@@ -138,6 +145,34 @@ public class LoadGame extends ListActivity {
                     });
             builder.create().show();
             return true;
+        }
+    };
+
+    private View.OnClickListener deleteAllListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(LoadGame.this);
+            builder.setTitle(R.string.delete)
+                    .setMessage(R.string.deleteAll)
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            File[] files = new File(FILE_LOCATION).listFiles();
+                            for (File file : files) {
+                                file.delete();
+                            }
+                            fileNames.clear();
+                            gameAdapter.notifyDataSetChanged();
+                            Toast.makeText(getApplicationContext(), "All Files deleted", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            builder.create().show();
         }
     };
 }

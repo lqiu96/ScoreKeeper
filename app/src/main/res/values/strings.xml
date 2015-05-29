@@ -28,6 +28,7 @@
     <string name="reallyDeleteGame">Do you really want to delete this game?</string>
     <string name="fileExists">File name is in use.</string>
     <string name="update">Update</string>
+    <string name="deleteAll">Delete All Files</string>
 
     <string-array name="dialogItems">
         <item>Delete</item>
