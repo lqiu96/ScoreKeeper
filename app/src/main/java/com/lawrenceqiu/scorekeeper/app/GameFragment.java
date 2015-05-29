@@ -35,6 +35,10 @@ public class GameFragment extends ListFragment {
 
     private String gameName;
     private EditText name;
+
+    private boolean isLimit;
+    private int playerLimit;
+
     /**
      * ImageButton's onClickListener
      * Checks to see if the user had inputted anything
@@ -58,8 +62,12 @@ public class GameFragment extends ListFragment {
                         });
                 builder.create().show();
             } else {
-                addInName(name.getText().toString());
-                name.setText("");
+                if (!isLimit || playerNames.size() < playerLimit) {
+                    addInName(name.getText().toString());
+                    name.setText("");
+                } else {
+                    Toast.makeText(getActivity(), R.string.passed_limit, Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
@@ -187,6 +195,8 @@ public class GameFragment extends ListFragment {
 
         adapter = new PlayerAdapter(getActivity().getApplicationContext(), playerNames);
         setListAdapter(adapter);
+
+        playerLimit = 0;
     }
 
     /**
@@ -273,5 +283,13 @@ public class GameFragment extends ListFragment {
      */
     public void setGameName(String name) {
         gameName = name;
+    }
+
+    public void setPlayerLimit(int playerLimit) {
+        this.playerLimit = playerLimit;
+    }
+
+    public void setLimit(boolean limit) {
+        isLimit = limit;
     }
 }

@@ -4,9 +4,12 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -28,8 +31,28 @@ import java.util.Calendar;
  * To change this template use File | Settings | File Templates.
  */
 public class Game extends AppCompatActivity {
+    private final String LIMIT = "pref_limit_num_players";
+    private final String NUM_PLAYERS = "pref_choose_num_players";
+
     private GameFragment gameFragment;
     private boolean gameSaved;
+
+
+    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener =
+            new SharedPreferences.OnSharedPreferenceChangeListener() {
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                    if (key.equals(NUM_PLAYERS)) {
+                        int limit = Integer.parseInt(sharedPreferences.getString(NUM_PLAYERS, "1"));
+                        Log.i("limit number", limit + "");
+                        gameFragment.setPlayerLimit(limit);
+                    } else if (key.equals(LIMIT)) {
+                        boolean isLimit = sharedPreferences.getBoolean(LIMIT, false);
+                        Log.i("isLimit", isLimit + "");
+                        gameFragment.setLimit(isLimit);
+                    }
+                }
+            };
 
     /**
      * Creates game layout which contains ActionBar and Fragment.
@@ -62,6 +85,18 @@ public class Game extends AppCompatActivity {
             gameSaved = true;
         } else {
             gameSaved = false;
+        }
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean limit = sharedPreferences.getBoolean(LIMIT, false);
+        Log.i("Limit 1", limit + "");
+        gameFragment.setLimit(limit);
+        if (limit) {
+            int limitNumber = Integer.parseInt(sharedPreferences.getString(NUM_PLAYERS, "0"));
+            gameFragment.setPlayerLimit(limitNumber);
         }
     }
 

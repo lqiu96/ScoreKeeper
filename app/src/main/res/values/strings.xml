@@ -41,8 +41,24 @@
     <string name="confirm">Confirm</string>
     <string name="editName">Edit Name:</string>
     <string name="delete">Delete</string>
+    <string name="createGame">Create New Game</string>
+
+    <!-- Settings -->
+    <string name="setLimitPlayer">Limit number of players</string>
+    <string name="numberPlayers">Choose number of players</string>
+    <string name="numberPlayers_default">25</string>
+    <string name="passed_limit">Exceeded player limit.</string>
 
     <string-array name="dialogItems">
         <item>Delete</item>
+    </string-array>
+
+    <string-array name="numberOfPlayers">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>25</item>
+        <item>50</item>
+        <item>100</item>
     </string-array>
 </resources>
