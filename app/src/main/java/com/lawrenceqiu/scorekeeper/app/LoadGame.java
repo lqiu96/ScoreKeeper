@@ -31,8 +31,6 @@ public class LoadGame extends ListActivity {
     private ArrayList<String> fileNames;
     private GameAdapter gameAdapter;
 
-    private Button deleteAll;
-
     /**
      * Sets up the arrayAdapter for the list and sets up functionality for clicking on the items
      * Gets the list of fileNames
@@ -51,7 +49,7 @@ public class LoadGame extends ListActivity {
         getListView().setOnItemClickListener(itemClickListener);
         getListView().setOnItemLongClickListener(itemLongClickListener);
 
-        deleteAll = (Button) findViewById(R.id.deleteAllFiles);
+        Button deleteAll = (Button) findViewById(R.id.deleteAllFiles);
         deleteAll.setOnClickListener(deleteAllListener);
     }
 
@@ -113,7 +111,8 @@ public class LoadGame extends ListActivity {
                     e.printStackTrace();
                 }
             }
-            startActivity(loadSavedGame);
+            LoadGame.this.finish();         //Remove this from the back stack so when user press back from Loaded game
+            startActivity(loadSavedGame);   //Goes straight back to the main screen
         }
     };
 

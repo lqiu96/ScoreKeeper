@@ -16,8 +16,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.lawrenceqiu.scorekeeper.app.Game"/>
-        <activity android:name="com.lawrenceqiu.scorekeeper.app.LoadGame"/>
+        <activity
+                android:name="com.lawrenceqiu.scorekeeper.app.Game"
+                android:parentActivityName="com.lawrenceqiu.scorekeeper.app.MainActivity"/>
+        <activity
+                android:name="com.lawrenceqiu.scorekeeper.app.LoadGame"
+                android:parentActivityName="com.lawrenceqiu.scorekeeper.app.MainActivity"/>
+        <activity
+                android:name="com.lawrenceqiu.scorekeeper.app.SettingsActivity"
+                android:parentActivityName="com.lawrenceqiu.scorekeeper.app.MainActivity"/>
     </application>
 
 </manifest>

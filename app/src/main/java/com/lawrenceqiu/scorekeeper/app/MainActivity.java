@@ -33,6 +33,14 @@ public class MainActivity extends Activity {
         }
     };
 
+    private View.OnClickListener loadSettingsListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent loadSettings = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(loadSettings);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,5 +51,8 @@ public class MainActivity extends Activity {
 
         Button loadGame = (Button) findViewById(R.id.loadGame);
         loadGame.setOnClickListener(loadNewGameListener);
+
+        Button settings = (Button) findViewById(R.id.settings);
+        settings.setOnClickListener(loadSettingsListener);
     }
 }
