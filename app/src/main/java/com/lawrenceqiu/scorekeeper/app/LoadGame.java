@@ -110,6 +110,11 @@ public class LoadGame extends ListActivity {
         }
     };
 
+    /**
+     * Handles when a user long clicks on the loaded game. It gets the fileName and pops up and
+     * alertDialog to confirm with the user that they really want to delete the game file
+     *  -If game is deleted, reload and notify that the list has changed
+     */
     private AdapterView.OnItemLongClickListener itemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {

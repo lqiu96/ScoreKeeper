@@ -30,7 +30,13 @@ public class Game extends AppCompatActivity {
     private boolean gameSaved;
 
     /**
-     * Creates game layout which contains ActionBar and Fragment
+     * Creates game layout which contains ActionBar and Fragment.
+     * Checks to see if this Activity was called from an intent. If it was loaded, the intent would
+     * have passed additional serialized objects (e.g. intentExtras != null)
+     * Sets the gameFragment with the players and updates its name
+     * gameSaved is then set to true so that you have to update to save
+     *
+     * Otherwise gameSaved is false so you must save game for it to be recorded (can't update)
      *
      * @param savedInstanceState Bundle to store the data
      */
@@ -70,6 +76,15 @@ public class Game extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * If the game be loaded up or previously saved (gameSaved is false)
+     *  -Disable 'Save Game' Button and enable 'Update'
+     * Otherwise
+     *  -Enable 'Save Game' Button and disable 'Update'
+     *
+     * @param menu ActionBar menu
+     * @return super class boolean variable
+     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (!gameSaved) {
@@ -107,6 +122,11 @@ public class Game extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Gets the game name (whether it was the default name they set)
+     * Method is only called when user pushes the update button (so game must have a name)
+     * Overwrites previous file with new data
+     */
     private void updateGame() {
         String gameName = gameFragment.getGameName();
         Log.i("directory", getFilesDir() + "/logGames/" + gameName);
