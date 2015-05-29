@@ -2,6 +2,7 @@ package com.lawrenceqiu.scorekeeper.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,7 +41,7 @@ public class GameFragment extends ListFragment {
      * If not, create an AlertDialog that informs the user that they must input a name
      * Otherwise it attempts to add the name in
      * -If name already exists, it creates a Toast that informs the user to input a different name
-     * -Otherwise adds the name in and notifies the listview that data has changed
+     * -Otherwise adds the name in and notifies the ListView that data has changed
      */
     private View.OnClickListener addPlayerListener = new View.OnClickListener() {
         @Override
@@ -89,11 +90,9 @@ public class GameFragment extends ListFragment {
         @Override
         public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {    //Can only change name if version code is >20
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                final View customView = inflater.inflate(R.layout.change_name, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.editName))
-                        .setView(customView)
+                        .setView(R.layout.change_name)
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -103,8 +102,9 @@ public class GameFragment extends ListFragment {
                         .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                EditText editText = (EditText) customView.findViewById(R.id.changedName);
-                                String name = editText.getText().toString();
+                                Dialog userDialog = (Dialog) dialog;
+                                EditText newName = (EditText) userDialog.findViewById(R.id.changedName);
+                                String name = newName.getText().toString();
                                 if (name.length() == 0) {       //Checks to see if anything is inputted
                                     Toast.makeText(getActivity(), R.string.dialog_name_error, Toast.LENGTH_SHORT).show();
                                 } else if (playerNames.get(position).getName().equals(name)) {  //Checks if that is what name is already set as
