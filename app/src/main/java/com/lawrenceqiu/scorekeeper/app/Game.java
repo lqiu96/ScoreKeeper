@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.lawrence.scorekeeper.app.R;
@@ -38,22 +40,23 @@ public class Game extends AppCompatActivity {
     private GameFragment gameFragment;
     private boolean gameSaved;
 
+    private Button saveGame;
+    private Button updateGame;
 
-    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener =
-            new SharedPreferences.OnSharedPreferenceChangeListener() {
-                @Override
-                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                    if (key.equals(NUM_PLAYERS)) {
-                        int limit = Integer.parseInt(sharedPreferences.getString(NUM_PLAYERS, "1"));
-                        Log.i("limit number", limit + "");
-                        gameFragment.setPlayerLimit(limit);
-                    } else if (key.equals(LIMIT)) {
-                        boolean isLimit = sharedPreferences.getBoolean(LIMIT, false);
-                        Log.i("isLimit", isLimit + "");
-                        gameFragment.setLimit(isLimit);
-                    }
-                }
-            };
+    private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals(NUM_PLAYERS)) {
+                int limit = Integer.parseInt(sharedPreferences.getString(NUM_PLAYERS, "1"));
+                Log.i("limit number", limit + "");
+                gameFragment.setPlayerLimit(limit);
+            } else if (key.equals(LIMIT)) {
+                boolean isLimit = sharedPreferences.getBoolean(LIMIT, false);
+                Log.i("isLimit", isLimit + "");
+                gameFragment.setLimit(isLimit);
+            }
+        }
+    };
 
     /**
      * Creates game layout which contains ActionBar and Fragment.
@@ -61,7 +64,7 @@ public class Game extends AppCompatActivity {
      * have passed additional serialized objects (e.g. intentExtras != null)
      * Sets the gameFragment with the players and updates its name
      * gameSaved is then set to true so that you have to update to save
-     *
+     * <p/>
      * Otherwise gameSaved is false so you must save game for it to be recorded (can't update)
      *
      * @param savedInstanceState Bundle to store the data
@@ -72,6 +75,22 @@ public class Game extends AppCompatActivity {
         setContentView(R.layout.game_main);
 
         gameFragment = (GameFragment) getFragmentManager().findFragmentById(R.id.gameFrag);
+
+        saveGame = (Button) findViewById(R.id.saveGame);
+        updateGame = (Button) findViewById(R.id.updateGame);
+
+        saveGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveGame();
+            }
+        });
+        updateGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateGame();
+            }
+        });
 
         Bundle intentExtras = getIntent().getExtras();
         if (intentExtras != null) {
@@ -87,6 +106,8 @@ public class Game extends AppCompatActivity {
         } else {
             gameSaved = false;
         }
+
+        updateSaveGameButtons();
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
@@ -116,24 +137,24 @@ public class Game extends AppCompatActivity {
 
     /**
      * If the game be loaded up or previously saved (gameSaved is false)
-     *  -Disable 'Save Game' Button and enable 'Update'
+     * -Disable 'Save Game' Button and enable 'Update'
      * Otherwise
-     *  -Enable 'Save Game' Button and disable 'Update'
+     * -Enable 'Save Game' Button and disable 'Update'
      *
      * @param menu ActionBar menu
      * @return super class boolean variable
      */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (!gameSaved) {
-            menu.getItem(0).setEnabled(true);
-            menu.getItem(1).setEnabled(false);
-        } else {
-            menu.getItem(0).setEnabled(false);
-            menu.getItem(1).setEnabled(true);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        if (!gameSaved) {
+//            menu.getItem(0).setEnabled(true);
+//            menu.getItem(1).setEnabled(false);
+//        } else {
+//            menu.getItem(0).setEnabled(false);
+//            menu.getItem(1).setEnabled(true);
+//        }
+//        return super.onPrepareOptionsMenu(menu);
+//    }
 
     /**
      * Handles when the user selects an option on the menu
@@ -150,12 +171,12 @@ public class Game extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.save_game:
-                saveGame();
-                break;
-            case R.id.update_game:
-                updateGame();
-                break;
+//            case R.id.save_game:
+//                saveGame();
+//                break;
+//            case R.id.update_game:
+//                updateGame();
+//                break;
             case R.id.update_settings:
                 updateSettings();
         }
@@ -181,7 +202,7 @@ public class Game extends AppCompatActivity {
      * Creates a new ActionDialog for when the user chooses the Save Game option on the Menu
      * Gives users three options, Cancel (Dismiss the dialog), Default (creates a name for the file
      * based on the current time), and Custom which allows users to select their own name for the file
-     *
+     * <p/>
      * Passes the name of the file to create the File
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -225,6 +246,7 @@ public class Game extends AppCompatActivity {
     /**
      * Saves the name in the internal storage folder of data/data/com.lawrence.scorekeeper.app/logGames
      * Creates directory if it doesn't exist there. Does nothing is file name already exists
+     *
      * @param customName Name of the file
      */
     private void save(String customName) {
@@ -234,16 +256,26 @@ public class Game extends AppCompatActivity {
             directory.getParentFile().mkdirs();
             writeToFile(directory);
             gameSaved = !gameSaved;
-            invalidateOptionsMenu();
+            updateSaveGameButtons();
         } else {            //REPLACE THIS WITH ALERTDIALOG TO MAKE USER CONFIRM TO OVERWRITE PREVIOUS DATA
             Toast.makeText(getApplicationContext(), R.string.fileExists, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateSaveGameButtons() {
+        if (gameSaved) {
+            saveGame.setEnabled(false);
+            updateGame.setEnabled(true);
+        } else {
+            saveGame.setEnabled(true);
+            updateGame.setEnabled(false);
         }
     }
 
     /**
      * Gets the list of Player objects from the gameFragment and serializes them
      * Each Object is written to the file (Name and Scores)
-     *
+     * <p/>
      * Notifies the user with a Toast that file has been saved
      *
      * @param file File that the directory's absolute path is in

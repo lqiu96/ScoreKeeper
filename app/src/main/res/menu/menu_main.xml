@@ -3,6 +3,7 @@
       xmlns:tools="http://schemas.android.com/tools"
       android:title="@string/createGame"
       tools:context=".Game">
+    <!--
     <item android:id="@+id/save_game"
           android:title="@string/save"
           android:orderInCategory="1"
@@ -11,8 +12,9 @@
           android:title="@string/update"
           android:orderInCategory="2"
           app:showAsAction="ifRoom"/>
+          -->
     <item android:id="@+id/update_settings"
           android:title="@string/settings"
-          android:orderInCategory="3"
+          android:orderInCategory="1"
           app:showAsAction="ifRoom"/>
 </menu>

@@ -111,8 +111,7 @@ public class LoadGame extends ListActivity {
                     e.printStackTrace();
                 }
             }
-            LoadGame.this.finish();         //Remove this from the back stack so when user press back from Loaded game
-            startActivity(loadSavedGame);   //Goes straight back to the main screen
+            startActivity(loadSavedGame);
         }
     };
 
