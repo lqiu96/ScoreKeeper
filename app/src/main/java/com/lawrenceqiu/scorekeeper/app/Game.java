@@ -7,14 +7,16 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.lawrence.scorekeeper.app.R;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -129,7 +131,6 @@ public class Game extends AppCompatActivity {
      */
     private void updateGame() {
         String gameName = gameFragment.getGameName();
-        Log.i("directory", getFilesDir() + "/logGames/" + gameName);
         writeToFile(new File(getFilesDir() + "/logGames/" + gameName));
     }
 
