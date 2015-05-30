@@ -22,8 +22,8 @@
     <string name="loadGame">Load Previous Game</string>
     <string name="settings">Settings</string>
 
-    <!-- ActionBar -->
-    <string name="save">Save Game</string>
+    <!-- Buttons in Game -->
+    <string name="saveGame">Save Game</string>
     <string name="update">Update</string>
 
     <!-- Errors -->
@@ -39,9 +39,13 @@
     <string name="change">Change name</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="save">Save</string>
     <string name="editName">Edit Name:</string>
     <string name="delete">Delete</string>
     <string name="createGame">Create New Game</string>
+    <string name="confirmSaveGame">Do you want to save the game?</string>
+    <string name="fileSaved">File Saved</string>
+    <string name="nothingSaved">Nothing to save</string>
 
     <!-- Settings -->
     <string name="setLimitPlayer">Limit number of players</string>

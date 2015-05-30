@@ -35,6 +35,7 @@ import java.util.Calendar;
 public class Game extends AppCompatActivity {
     private final String LIMIT = "pref_limit_num_players";
     private final String NUM_PLAYERS = "pref_choose_num_players";
+    private final String AUTO_SAVE = "pref_auto_save";
 
     private GameFragment gameFragment;
     private boolean gameSaved;
@@ -128,16 +129,6 @@ public class Game extends AppCompatActivity {
         if (limit) {
             int limitNumber = Integer.parseInt(sharedPreferences.getString(NUM_PLAYERS, "0"));
             gameFragment.setPlayerLimit(limitNumber);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (gameSaved) {
-            updateGame();
-        } else {        //Not been saved-- Has no name
-            save(Calendar.getInstance().getTime().toString());
         }
     }
 
@@ -240,7 +231,11 @@ public class Game extends AppCompatActivity {
                             Dialog dialogView = (Dialog) dialog;        //Some reason this works, but inflating the layout doesn't
                             EditText name = (EditText) dialogView.findViewById(R.id.game_custom_name);
                             String fileName = name.getText().toString();
-                            save(fileName);
+                            if (gameFragment.getPlayerNames().size() > 0) {
+                                save(fileName);
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.nothingSaved, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
             builder.create().show();
@@ -261,7 +256,7 @@ public class Game extends AppCompatActivity {
             writeToFile(directory);
             gameSaved = !gameSaved;
             updateSaveGameButtons();
-        } else {            //REPLACE THIS WITH ALERTDIALOG TO MAKE USER CONFIRM TO OVERWRITE PREVIOUS DATA
+        } else {
             Toast.makeText(getApplicationContext(), R.string.fileExists, Toast.LENGTH_SHORT).show();
         }
     }
@@ -287,24 +282,28 @@ public class Game extends AppCompatActivity {
     private void writeToFile(File file) {
         GameFragment gameFragment = (GameFragment) getFragmentManager().findFragmentById(R.id.gameFrag);
         ArrayList<Player> playerNames = gameFragment.getPlayerNames();
-        ObjectOutputStream outputStream = null;
-        try {
-            outputStream = new ObjectOutputStream(new FileOutputStream(file));
-            outputStream.writeInt(playerNames.size());
-            for (Player player : playerNames) {
-                outputStream.writeObject(player);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+        if (playerNames.size() != 0) {
+            ObjectOutputStream outputStream = null;
             try {
-                if (outputStream != null) {
-                    outputStream.close();
+                outputStream = new ObjectOutputStream(new FileOutputStream(file));
+                outputStream.writeInt(playerNames.size());
+                for (Player player : playerNames) {
+                    outputStream.writeObject(player);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            Toast.makeText(getApplicationContext(), R.string.fileSaved, Toast.LENGTH_SHORT).show();
+        } else {    //Solely for phones with API <20 since saved with default name and alert dialog doesn't pop up
+            Toast.makeText(getApplicationContext(), R.string.nothingSaved, Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(getApplicationContext(), "File saved", Toast.LENGTH_SHORT).show();
     }
 }
