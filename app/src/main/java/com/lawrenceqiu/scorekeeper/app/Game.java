@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,11 +47,9 @@ public class Game extends AppCompatActivity {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(NUM_PLAYERS)) {
                 int limit = Integer.parseInt(sharedPreferences.getString(NUM_PLAYERS, "1"));
-                Log.i("limit number", limit + "");
                 gameFragment.setPlayerLimit(limit);
             } else if (key.equals(LIMIT)) {
                 boolean isLimit = sharedPreferences.getBoolean(LIMIT, false);
-                Log.i("isLimit", isLimit + "");
                 gameFragment.setLimit(isLimit);
             }
         }
@@ -92,6 +89,15 @@ public class Game extends AppCompatActivity {
             }
         });
 
+        if (savedInstanceState != null) {
+            ArrayList<Player> players = new ArrayList<>();
+            int size = savedInstanceState.getInt("numPlayers");
+            for (int i = 0; i < size; i++) {
+                players.add(savedInstanceState.<Player>getParcelable("player" + i));
+            }
+            gameFragment.setPlayerNames(players);
+        }
+
         Bundle intentExtras = getIntent().getExtras();
         if (intentExtras != null) {
             ArrayList<Player> players = new ArrayList<>();
@@ -114,7 +120,6 @@ public class Game extends AppCompatActivity {
                 .registerOnSharedPreferenceChangeListener(preferenceChangeListener);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean limit = sharedPreferences.getBoolean(LIMIT, false);
-        Log.i("Limit 1", limit + "");
         gameFragment.setLimit(limit);
         if (limit) {
             int limitNumber = Integer.parseInt(sharedPreferences.getString(NUM_PLAYERS, "0"));
@@ -136,27 +141,6 @@ public class Game extends AppCompatActivity {
     }
 
     /**
-     * If the game be loaded up or previously saved (gameSaved is false)
-     * -Disable 'Save Game' Button and enable 'Update'
-     * Otherwise
-     * -Enable 'Save Game' Button and disable 'Update'
-     *
-     * @param menu ActionBar menu
-     * @return super class boolean variable
-     */
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//        if (!gameSaved) {
-//            menu.getItem(0).setEnabled(true);
-//            menu.getItem(1).setEnabled(false);
-//        } else {
-//            menu.getItem(0).setEnabled(false);
-//            menu.getItem(1).setEnabled(true);
-//        }
-//        return super.onPrepareOptionsMenu(menu);
-//    }
-
-    /**
      * Handles when the user selects an option on the menu
      *
      * @param item Which item was selected on the menu
@@ -171,16 +155,22 @@ public class Game extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-//            case R.id.save_game:
-//                saveGame();
-//                break;
-//            case R.id.update_game:
-//                updateGame();
-//                break;
             case R.id.update_settings:
                 updateSettings();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        ArrayList<Player> players = gameFragment.getPlayerNames();
+        outState.putInt("numPlayers", players.size());
+        int i = 0;
+        for (Player player : players) {
+            outState.putParcelable("player" + i, player);
+            i++;
+        }
     }
 
     private void updateSettings() {

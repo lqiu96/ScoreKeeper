@@ -12,10 +12,7 @@ import android.widget.Toast;
 import com.lawrence.scorekeeper.app.R;
 import com.lawrenceqiu.scorekeeper.app.adapters.GameAdapter;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -96,7 +93,7 @@ public class LoadGame extends ListActivity {
                 Player player;
                 for (int i = 0; i < numPlayers; i++) {      //If original ArrayList goes from 0-15 (size:16), this goes from 1-15
                     player = (Player) inputStream.readObject();
-                    loadSavedGame.putExtra("player" + (i + 1), player);
+                    loadSavedGame.putExtra("player" + (i + 1), (Serializable) player);
                 }
                 loadSavedGame.putExtra("gameName", fileNames.get(position));
                 loadSavedGame.putExtra("numPlayers", numPlayers);

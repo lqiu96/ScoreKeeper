@@ -1,5 +1,8 @@
 package com.lawrenceqiu.scorekeeper.app;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
@@ -9,7 +12,7 @@ import java.io.Serializable;
  * Time: 2:39 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Player implements Serializable {
+public class Player implements Serializable, Parcelable {
     private String name;
     private int score;
 
@@ -92,5 +95,33 @@ public class Player implements Serializable {
                 "name='" + name + '\'' +
                 ", score=" + score +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeInt(score);
+    }
+
+    public static final Parcelable.Creator<Player> CREATOR = new Creator<Player>() {
+        @Override
+        public Player createFromParcel(Parcel source) {
+            return new Player(source);
+        }
+
+        @Override
+        public Player[] newArray(int size) {
+            return new Player[size];
+        }
+    };
+
+    private Player(Parcel in) {
+        name = in.readString();
+        score = in.readInt();
     }
 }
