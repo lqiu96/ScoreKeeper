@@ -15,7 +15,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="@dimen/abc_text_size_medium_material"
             android:padding="@dimen/abc_edit_text_inset_horizontal_material"/>
 
@@ -31,7 +31,9 @@
                 android:text="@string/newGame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                style="?android:attr/buttonBarButtonStyle"
+                android:textColor="@color/black"
                 android:gravity="center"/>
 
         <Button
@@ -39,7 +41,9 @@
                 android:text="@string/loadGame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                style="?android:attr/buttonBarButtonStyle"
+                android:textColor="@color/black"
                 android:gravity="center"/>
 
         <Button
@@ -47,7 +51,9 @@
                 android:text="@string/settings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                style="?android:attr/buttonBarButtonStyle"
+                android:textColor="@color/black"
                 android:gravity="center"/>
     </LinearLayout>
 
