@@ -113,17 +113,31 @@ public class Game extends AppCompatActivity {
             gameSaved = false;
         }
 
-        updateSaveGameButtons();
-
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateSaveGameButtons();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean limit = sharedPreferences.getBoolean(LIMIT, false);
         gameFragment.setLimit(limit);
         if (limit) {
             int limitNumber = Integer.parseInt(sharedPreferences.getString(NUM_PLAYERS, "0"));
             gameFragment.setPlayerLimit(limitNumber);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (gameSaved) {
+            updateGame();
+        } else {        //Not been saved-- Has no name
+            save(Calendar.getInstance().getTime().toString());
         }
     }
 

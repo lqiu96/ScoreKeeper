@@ -13,12 +13,24 @@ import java.io.Serializable;
  * To change this template use File | Settings | File Templates.
  */
 public class Player implements Serializable, Parcelable {
+    public static final Parcelable.Creator<Player> CREATOR = new Creator<Player>() {
+        @Override
+        public Player createFromParcel(Parcel source) {
+            return new Player(source);
+        }
+
+        @Override
+        public Player[] newArray(int size) {
+            return new Player[size];
+        }
+    };
     private String name;
     private int score;
 
     /**
      * Player constructor which initializes name
      * and sets score by default to zero
+     *
      * @param name Player's name
      */
     public Player(String name) {
@@ -26,8 +38,14 @@ public class Player implements Serializable, Parcelable {
         this.score = 0;
     }
 
+    private Player(Parcel in) {
+        name = in.readString();
+        score = in.readInt();
+    }
+
     /**
      * Gets the score
+     *
      * @return Player's score
      */
     public int getScore() {
@@ -36,6 +54,7 @@ public class Player implements Serializable, Parcelable {
 
     /**
      * Gets the name
+     *
      * @return Player's name
      */
     public String getName() {
@@ -62,6 +81,7 @@ public class Player implements Serializable, Parcelable {
 
     /**
      * Tests if two Player classes are equal
+     *
      * @param o Object being compared to
      * @return If the object passed into is the same or has the same name it is true, otherwise it is false
      */
@@ -78,6 +98,7 @@ public class Player implements Serializable, Parcelable {
 
     /**
      * Create a generic hashcode
+     *
      * @return Intellij's created hashcode based on the user's name
      */
     @Override
@@ -87,6 +108,7 @@ public class Player implements Serializable, Parcelable {
 
     /**
      * String representation of the class
+     *
      * @return String with player's name and score
      */
     @Override
@@ -106,22 +128,5 @@ public class Player implements Serializable, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeInt(score);
-    }
-
-    public static final Parcelable.Creator<Player> CREATOR = new Creator<Player>() {
-        @Override
-        public Player createFromParcel(Parcel source) {
-            return new Player(source);
-        }
-
-        @Override
-        public Player[] newArray(int size) {
-            return new Player[size];
-        }
-    };
-
-    private Player(Parcel in) {
-        name = in.readString();
-        score = in.readInt();
     }
 }
