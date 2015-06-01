@@ -23,8 +23,7 @@
             android:id="@+id/deleteAllFiles"
             android:text="@string/deleteAll"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:background="@color/red"
-            android:textColor="@color/black"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

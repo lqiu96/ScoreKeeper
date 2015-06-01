@@ -33,9 +33,8 @@ import java.util.Calendar;
  * To change this template use File | Settings | File Templates.
  */
 public class Game extends AppCompatActivity {
-    private final String LIMIT = "pref_limit_num_players";
-    private final String NUM_PLAYERS = "pref_choose_num_players";
-    private final String AUTO_SAVE = "pref_auto_save";
+    private final String LIMIT = "pref_limit_num_players";  //Preference key for the checkbox
+    private final String NUM_PLAYERS = "pref_choose_num_players";  //Preference key for the list
 
     private GameFragment gameFragment;
     private boolean gameSaved;
@@ -43,6 +42,9 @@ public class Game extends AppCompatActivity {
     private Button saveGame;
     private Button updateGame;
 
+    /**
+     * Preference changer listener that determines the appropriate actions based on what actions changed
+     */
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -119,6 +121,12 @@ public class Game extends AppCompatActivity {
                 .registerOnSharedPreferenceChangeListener(preferenceChangeListener);
     }
 
+    /**
+     * Updates the buttons on the bottom based on whether the game had previously been loaded or is newly created
+     * -Newly created, Save game is enabled
+     * -Loaded, update game is enabled
+     * Gets the SharedPreferences and updates the gameFragment accordingly
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -166,6 +174,13 @@ public class Game extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Typically loaded when user tilts the screen. Gets the gameName and updates it firstly
+     * For each Player object that is to be written to be saved, it gives them a name
+     * starting from player0 to player(size)
+     *
+     * @param outState Bundle of Player objects
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -178,6 +193,9 @@ public class Game extends AppCompatActivity {
         }
     }
 
+    /**
+     * Loads the Settings screen by using an intent
+     */
     private void updateSettings() {
         Intent settings = new Intent(this, SettingsActivity.class);
         startActivity(settings);
@@ -261,6 +279,12 @@ public class Game extends AppCompatActivity {
         }
     }
 
+    /**
+     * If game had previously been saved
+     * -Enable the updateGame button
+     * If game is newly created
+     * -Enable the saveGame button
+     */
     private void updateSaveGameButtons() {
         if (gameSaved) {
             saveGame.setEnabled(false);

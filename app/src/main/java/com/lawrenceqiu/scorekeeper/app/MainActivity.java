@@ -33,6 +33,10 @@ public class MainActivity extends Activity {
         }
     };
 
+    /**
+     * Handles when the user opts to load the settings
+     * Creates intent to launch the Settings Screen
+     */
     private View.OnClickListener loadSettingsListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -41,6 +45,12 @@ public class MainActivity extends Activity {
         }
     };
 
+    /**
+     * Sets the view for the game and sets up the the buttons to load the three screens
+     * Each button leads to a different activity
+     *
+     * @param savedInstanceState Saved state from previous sessions
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

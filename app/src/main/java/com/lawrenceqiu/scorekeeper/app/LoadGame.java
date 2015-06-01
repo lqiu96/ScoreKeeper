@@ -23,6 +23,10 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class LoadGame extends ListActivity {
+    /*
+        logGames is the directory in where the files are stored. Everything before the the default private
+        storage for the app
+     */
     private static final String FILE_LOCATION = "data/data/com.lawrenceqiu.scorekeeper.app/files/logGames";
 
     private ArrayList<String> fileNames;
@@ -143,6 +147,15 @@ public class LoadGame extends ListActivity {
         }
     };
 
+    /**
+     * Handles when the user opts for the bottom on the bottom ('Delete all the files in the list')
+     * Asks the user to confirm their action of deleting all the files
+     * If the user opts to delete all the names
+     * 1. Get all the files in the directory
+     * 2. Goes through all the files in the directory
+     * -If there are no files, Toast pops up informing the user that there were no files to delete
+     * -Else displays that all files are deleted and resets the list
+     */
     private View.OnClickListener deleteAllListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

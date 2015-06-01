@@ -132,50 +132,27 @@ public class GameFragment extends ListFragment {
             }
         }
     };
+
     /**
-     * Displays a list of options for the user to choose
-     * Delete would remove the player from the leader board
-     * -User must confirm the action in the event of a mis-click
+     * Asks the user if they want to delete the selected name. Asks the user to confirm whether they want to
+     * remove the name from the list
      */
     private AdapterView.OnItemLongClickListener itemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(getString(R.string.options))
-                    .setItems(R.array.dialogItems, new DialogInterface.OnClickListener() {
+            builder.setTitle(R.string.confirmDelete)
+                    .setMessage(R.string.delete)
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                case 0:
-                                    deletePlayer(playerNames, position);
-                            }
+                            dialog.dismiss();
                         }
-
-                        /**
-                         * Confirms that the user wants to delete the name
-                         * Dismisses the dialog if user selects cancel
-                         * Removes the player and updates the list if user confirms the action
-                         * @param playerNames Name to be deleted
-                         * @param position Position in the ArrayList
-                         */
-                        private void deletePlayer(final ArrayList<Player> playerNames, final int position) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle(getString(R.string.delete))
-                                    .setTitle(getString(R.string.deleteName))
-                                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            playerNames.remove(position);
-                                            adapter.notifyDataSetChanged();
-                                        }
-                                    });
-                            builder.create().show();
+                    })
+                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deletePlayer(playerNames, position);
                         }
                     });
             builder.create().show();
@@ -185,8 +162,44 @@ public class GameFragment extends ListFragment {
              */
             return true;
         }
+
+        /**
+         * Confirms that the user wants to delete the name
+         * Dismisses the dialog if user selects cancel
+         * Removes the player and updates the list if user confirms the action
+         *
+         * @param playerNames Name to be deleted
+         * @param position    Position in the ArrayList
+         */
+        private void deletePlayer(final ArrayList<Player> playerNames, final int position) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(getString(R.string.delete))
+                    .setTitle(getString(R.string.deleteName))
+                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            playerNames.remove(position);
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+            builder.create().show();
+        }
     };
 
+    /**
+     * Initializes the players names to be a default of an empty list and sets the array adapter to the PlayerAdapter
+     * class
+     *
+     * Default sets the playerLimit to 0, regardless if there is a limit set or not
+     *
+     * @param activity Game activity
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -285,10 +298,19 @@ public class GameFragment extends ListFragment {
         gameName = name;
     }
 
+    /**
+     * Sets a limit on  the number of players for each game
+     *
+     * @param playerLimit Max number of players
+     */
     public void setPlayerLimit(int playerLimit) {
         this.playerLimit = playerLimit;
     }
 
+    /**
+     * Sets a limit on the number of players
+     * @param limit If there is a limit or not
+     */
     public void setLimit(boolean limit) {
         isLimit = limit;
     }

@@ -14,11 +14,22 @@ import java.io.Serializable;
  */
 public class Player implements Serializable, Parcelable {
     public static final Parcelable.Creator<Player> CREATOR = new Creator<Player>() {
+        /**
+         * Creates a new Player class with the Parcel constructor
+         *
+         * @param source Parcel object
+         * @return Player class
+         */
         @Override
         public Player createFromParcel(Parcel source) {
             return new Player(source);
         }
 
+        /**
+         * Returns new Player object from Player array
+         * @param size Number of players in the array
+         * @return Player object
+         */
         @Override
         public Player[] newArray(int size) {
             return new Player[size];
@@ -38,6 +49,12 @@ public class Player implements Serializable, Parcelable {
         this.score = 0;
     }
 
+    /**
+     * Newly created Player constructor that takes in a Parcel class
+     * reads the name and score and sets up the instance variables
+     *
+     * @param in Parcel input
+     */
     private Player(Parcel in) {
         name = in.readString();
         score = in.readInt();
@@ -119,11 +136,22 @@ public class Player implements Serializable, Parcelable {
                 '}';
     }
 
+    /**
+     * Describes it's contents
+     *
+     * @return 0
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
+    /**
+     * Writes out the name and score
+     *
+     * @param dest Parcel destination
+     * @param flags Flag
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);

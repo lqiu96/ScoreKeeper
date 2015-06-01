@@ -1,14 +1,12 @@
 <resources>
     <string name="app_name">ScoreKeeper</string>
 
-    <string name="newGame">New Game</string>
     <string name="addOne">+1</string>
     <string name="subtractOne">-1</string>
     <string name="name_exists">That name already exists. Pick another one.</string>
     <string name="players">Players</string>
     <string name="saveName">Save the name</string>
     <string name="enterName">Enter name…</string>
-    <string name="options">Options</string>
     <string name="is_current_name">It is what your current name is set as!</string>
     <string name="custom_name">Custom name</string>
     <string name="default_name">Default</string>
@@ -19,6 +17,7 @@
 
     <!-- Main Screen -->
     <string name="welcome">Welcome! Keep track of your scores.</string>
+    <string name="newGame">New Game</string>
     <string name="loadGame">Load Previous Game</string>
     <string name="settings">Settings</string>
 
@@ -41,6 +40,7 @@
     <string name="confirm">Confirm</string>
     <string name="save">Save</string>
     <string name="editName">Edit Name:</string>
+    <string name="confirmDelete">Confirm delete</string>
     <string name="delete">Delete</string>
     <string name="createGame">Create New Game</string>
     <string name="confirmSaveGame">Do you want to save the game?</string>
@@ -53,10 +53,6 @@
     <string name="numberPlayers_default">25</string>
     <string name="passed_limit">Exceeded player limit.</string>
     <string name="limitPlayers">Limit Players</string>
-
-    <string-array name="dialogItems">
-        <item>Delete</item>
-    </string-array>
 
     <string-array name="numberOfPlayers">
         <item>1</item>
