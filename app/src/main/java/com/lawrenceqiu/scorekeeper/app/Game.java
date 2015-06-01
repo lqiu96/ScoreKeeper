@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.lawrence.scorekeeper.app.R;
 
 import java.io.File;
@@ -138,6 +140,10 @@ public class Game extends AppCompatActivity {
             int limitNumber = Integer.parseInt(sharedPreferences.getString(NUM_PLAYERS, "0"));
             gameFragment.setPlayerLimit(limitNumber);
         }
+
+        AdView mAdView = (AdView) findViewById(R.id.gameAdView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+        mAdView.loadAd(adRequest);
     }
 
     /**

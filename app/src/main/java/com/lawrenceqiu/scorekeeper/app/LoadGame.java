@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.lawrence.scorekeeper.app.R;
 import com.lawrenceqiu.scorekeeper.app.adapters.GameAdapter;
 
@@ -52,6 +54,10 @@ public class LoadGame extends ListActivity {
 
         Button deleteAll = (Button) findViewById(R.id.deleteAllFiles);
         deleteAll.setOnClickListener(deleteAllListener);
+
+        AdView mAdView = (AdView) findViewById(R.id.loadGameAdView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+        mAdView.loadAd(adRequest);
     }
 
     /**
