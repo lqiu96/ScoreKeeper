@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.lawrence.scorekeeper.app.R;
 
 
@@ -66,9 +64,5 @@ public class MainActivity extends Activity {
 
         Button settings = (Button) findViewById(R.id.settings);
         settings.setOnClickListener(loadSettingsListener);
-
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
-        mAdView.loadAd(adRequest);
     }
 }

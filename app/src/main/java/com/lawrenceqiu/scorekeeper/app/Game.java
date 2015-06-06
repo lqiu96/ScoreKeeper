@@ -16,8 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.lawrence.scorekeeper.app.R;
 
 import java.io.File;
@@ -66,7 +64,7 @@ public class Game extends AppCompatActivity {
      * have passed additional serialized objects (e.g. intentExtras != null)
      * Sets the gameFragment with the players and updates its name
      * gameSaved is then set to true so that you have to update to save
-     * <p/>
+     * <p>
      * Otherwise gameSaved is false so you must save game for it to be recorded (can't update)
      *
      * @param savedInstanceState Bundle to store the data
@@ -140,10 +138,6 @@ public class Game extends AppCompatActivity {
             int limitNumber = Integer.parseInt(sharedPreferences.getString(NUM_PLAYERS, "0"));
             gameFragment.setPlayerLimit(limitNumber);
         }
-
-        AdView mAdView = (AdView) findViewById(R.id.gameAdView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
-        mAdView.loadAd(adRequest);
     }
 
     /**
@@ -221,7 +215,7 @@ public class Game extends AppCompatActivity {
      * Creates a new ActionDialog for when the user chooses the Save Game option on the Menu
      * Gives users three options, Cancel (Dismiss the dialog), Default (creates a name for the file
      * based on the current time), and Custom which allows users to select their own name for the file
-     * <p/>
+     * <p>
      * Passes the name of the file to create the File
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -304,7 +298,7 @@ public class Game extends AppCompatActivity {
     /**
      * Gets the list of Player objects from the gameFragment and serializes them
      * Each Object is written to the file (Name and Scores)
-     * <p/>
+     * <p>
      * Notifies the user with a Toast that file has been saved
      *
      * @param file File that the directory's absolute path is in
