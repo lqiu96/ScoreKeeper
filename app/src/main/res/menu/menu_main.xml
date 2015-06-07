@@ -3,18 +3,8 @@
       xmlns:tools="http://schemas.android.com/tools"
       android:title="@string/createGame"
       tools:context=".Game">
-    <!--
-    <item android:id="@+id/save_game"
-          android:title="@string/save"
-          android:orderInCategory="1"
-          app:showAsAction="ifRoom"/>
-    <item android:id="@+id/update_game"
-          android:title="@string/update"
-          android:orderInCategory="2"
-          app:showAsAction="ifRoom"/>
-          -->
-    <item android:id="@+id/update_settings"
-          android:title="@string/settings"
+    <item android:id="@+id/view_game_history"
+          android:title="@string/view_game_log"
           android:orderInCategory="1"
           app:showAsAction="ifRoom"/>
 </menu>

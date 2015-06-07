@@ -33,6 +33,8 @@ public class GameFragment extends ListFragment {
     private ArrayList<Player> playerNames;
     private PlayerAdapter adapter;
 
+    private ArrayList<String> gameLog;
+
     private String gameName;
     private EditText name;
 
@@ -82,11 +84,13 @@ public class GameFragment extends ListFragment {
                 name.setText("");
                 Toast.makeText(getActivity(), R.string.name_exists, Toast.LENGTH_SHORT).show();
             } else {
+                addToGameLog("Added new player: " + playerName);
                 playerNames.add(new Player(playerName));
                 adapter.notifyDataSetChanged();
             }
         }
     };
+
     /**
      * Handles when user taps on the Player's info
      * Creates a custom AlertDialog which allows the ability to change a user's name
@@ -120,6 +124,8 @@ public class GameFragment extends ListFragment {
                                 } else if (checkIfNameExists(name)) {       //Checks if name already exists
                                     Toast.makeText(getActivity(), R.string.name_exists, Toast.LENGTH_SHORT).show();
                                 } else {        //Otherwise add it in
+                                    String originalName = playerNames.get(position).getName();
+                                    addToGameLog("Player " + originalName + " has changed name to " + name);
                                     playerNames.get(position).setName(name);
                                     adapter.notifyDataSetChanged();
                                 }
@@ -184,6 +190,8 @@ public class GameFragment extends ListFragment {
                     .setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            String name = playerNames.get(position).getName();
+                            addToGameLog("Removed player: " + name);
                             playerNames.remove(position);
                             adapter.notifyDataSetChanged();
                         }
@@ -209,6 +217,7 @@ public class GameFragment extends ListFragment {
         adapter = new PlayerAdapter(getActivity().getApplicationContext(), playerNames);
         setListAdapter(adapter);
 
+        gameLog = new ArrayList<>();
         playerLimit = 0;
     }
 
@@ -313,5 +322,17 @@ public class GameFragment extends ListFragment {
      */
     public void setLimit(boolean limit) {
         isLimit = limit;
+    }
+
+    private void addToGameLog(String action) {
+        gameLog.add(action);
+    }
+
+    public ArrayList<String> getGameLog() {
+        return gameLog;
+    }
+
+    public void clearGameLog() {
+        gameLog.clear();
     }
 }

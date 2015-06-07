@@ -32,9 +32,8 @@
                 android:name="com.lawrenceqiu.scorekeeper.app.SettingsActivity"
                 android:parentActivityName="com.lawrenceqiu.scorekeeper.app.MainActivity"/>
         <activity
-                android:name="com.google.android.gms.ads.AdActivity"
-                android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-                android:theme="@android:style/Theme.Holo"/>
+                android:name="com.lawrenceqiu.scorekeeper.app.GameLogActivity"
+                android:parentActivityName="com.lawrenceqiu.scorekeeper.app.Game"/>
     </application>
 
 </manifest>

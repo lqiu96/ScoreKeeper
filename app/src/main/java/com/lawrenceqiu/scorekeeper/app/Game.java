@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,10 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.lawrence.scorekeeper.app.R;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -76,22 +74,6 @@ public class Game extends AppCompatActivity {
 
         gameFragment = (GameFragment) getFragmentManager().findFragmentById(R.id.gameFrag);
 
-        saveGame = (Button) findViewById(R.id.saveGame);
-        updateGame = (Button) findViewById(R.id.updateGame);
-
-        saveGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveGame();
-            }
-        });
-        updateGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateGame();
-            }
-        });
-
         if (savedInstanceState != null) {
             ArrayList<Player> players = new ArrayList<>();
             int size = savedInstanceState.getInt("numPlayers");
@@ -130,6 +112,22 @@ public class Game extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        saveGame = (Button) findViewById(R.id.saveGame);
+        updateGame = (Button) findViewById(R.id.updateGame);
+        saveGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveGame();
+            }
+        });
+        updateGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateGame();
+            }
+        });
+
         updateSaveGameButtons();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean limit = sharedPreferences.getBoolean(LIMIT, false);
@@ -168,10 +166,45 @@ public class Game extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.update_settings:
-                updateSettings();
+            case R.id.view_game_history:
+                loadGameLog();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadGameLog() {
+        Intent loadGameLog = new Intent(getApplicationContext(), GameLogActivity.class);
+        ArrayList<String> gameLog = gameFragment.getGameLog();
+        StringBuilder builder = new StringBuilder();
+
+        String gameName = gameFragment.getGameName();
+        if (gameName == null) {
+            if (gameLog.isEmpty()) {
+                builder.append("Empty\n");
+            } else {
+                for (String log : gameLog) {
+                    builder.append(log).append("\n");
+                }
+            }
+        } else {
+            File file = new File(getFilesDir() + "/logGames/" + gameName + "-Logs");
+            if (!file.exists()) {
+                Toast.makeText(this, R.string.nothingSaved, Toast.LENGTH_SHORT).show();
+            } else {
+                try {
+                    BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+                    String log;
+                    while ((log = bufferedReader.readLine()) != null) {
+                        builder.append(log).append("\n");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        loadGameLog.putExtra("log", builder.toString());
+        Log.i("log", builder.toString());
+        startActivity(loadGameLog);
     }
 
     /**
@@ -191,14 +224,6 @@ public class Game extends AppCompatActivity {
             outState.putParcelable("player" + i, player);
             i++;
         }
-    }
-
-    /**
-     * Loads the Settings screen by using an intent
-     */
-    private void updateSettings() {
-        Intent settings = new Intent(this, SettingsActivity.class);
-        startActivity(settings);
     }
 
     /**
@@ -301,18 +326,36 @@ public class Game extends AppCompatActivity {
      * <p>
      * Notifies the user with a Toast that file has been saved
      *
-     * @param file File that the directory's absolute path is in
+     * @param playerFile File that the directory's absolute path is in
      */
-    private void writeToFile(File file) {
+    private void writeToFile(File playerFile) {
         GameFragment gameFragment = (GameFragment) getFragmentManager().findFragmentById(R.id.gameFrag);
         ArrayList<Player> playerNames = gameFragment.getPlayerNames();
         if (playerNames.size() != 0) {
             ObjectOutputStream outputStream = null;
             try {
-                outputStream = new ObjectOutputStream(new FileOutputStream(file));
+                outputStream = new ObjectOutputStream(new FileOutputStream(playerFile));
                 outputStream.writeInt(playerNames.size());
                 for (Player player : playerNames) {
                     outputStream.writeObject(player);
+                }
+
+                String gameName = gameFragment.getGameName();
+                ArrayList<String> gameLog = gameFragment.getGameLog();
+                if (gameName != null) {
+                    File gameLogFile = new File(getFilesDir() + "/logGames/" + gameName + "-Logs");
+                    BufferedWriter bufferedWriter;
+                    if (gameLogFile.exists()) {
+                        bufferedWriter = new BufferedWriter(new FileWriter(gameLogFile, true));
+                    } else {
+                        bufferedWriter = new BufferedWriter(new FileWriter(gameLogFile));
+                    }
+                    for (String log : gameLog) {
+                        bufferedWriter.write(log);
+                        bufferedWriter.newLine();
+                    }
+                    gameFragment.clearGameLog();
+                    bufferedWriter.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
