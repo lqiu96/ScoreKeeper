@@ -30,6 +30,13 @@ import java.util.Calendar;
  * Time: 1:27 PM
  * To change this template use File | Settings | File Templates.
  */
+
+/**
+ * Originally has no need for a GameFragment inside of a Game Activity, but
+ * I selfishly decided that I wanted to play with an ActionBar. Since I had
+ * to choose between AppCompatActivity and ListActivity, I decided to have
+ * both... Now, with ActionBar and a ListActivity...
+ */
 public class Game extends AppCompatActivity {
     private final String LIMIT = "pref_limit_num_players";  //Preference key for the checkbox
     private final String NUM_PLAYERS = "pref_choose_num_players";  //Preference key for the list
