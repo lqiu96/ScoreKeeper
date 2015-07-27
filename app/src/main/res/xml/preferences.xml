@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+            android:key="pref_limit_players_category"
+            android:title="@string/limitPlayers">
+        <CheckBoxPreference
+                android:key="pref_limit_num_players"
+                android:title="@string/setLimitPlayer"
+                android:defaultValue="false"/>
+
+        <ListPreference
+                android:dependency="pref_limit_num_players"
+                android:key="pref_choose_num_players"
+                android:title="@string/numberPlayers"
+                android:dialogTitle="@string/players"
+                android:entries="@array/numberOfPlayers"
+                android:entryValues="@array/numberOfPlayers"
+                android:defaultValue="@string/numberPlayers_default"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

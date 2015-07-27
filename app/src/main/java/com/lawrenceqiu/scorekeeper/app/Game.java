@@ -24,14 +24,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Lawrence
- * Date: 5/27/2015
- * Time: 1:27 PM
- * To change this template use File | Settings | File Templates.
- */
-
-/**
  * Originally has no need for a GameFragment inside of a Game Activity, but
  * I selfishly decided that I wanted to play with an ActionBar. Since I had
  * to choose between AppCompatActivity and ListActivity, I decided to have
@@ -194,7 +186,7 @@ public class Game extends AppCompatActivity {
                 }
             }
         } else {
-            File file = new File(getFilesDir() + "/logGames/" + gameName + "-Logs");
+            File file = new File(getFilesDir() + "/logGames/log/" + gameName + "-Logs");
             if (!file.exists()) {
                 Toast.makeText(this, R.string.nothingSaved, Toast.LENGTH_SHORT).show();
             } else {
@@ -301,8 +293,10 @@ public class Game extends AppCompatActivity {
     private void save(String customName) {
         gameFragment.setGameName(customName);
         File directory = new File(getFilesDir() + "/logGames/" + customName);
+        File logFile = new File(getFilesDir() + "/logGames/log/" + customName);
         if (!directory.exists()) {
             directory.getParentFile().mkdirs();
+            logFile.getParentFile().mkdirs();
             writeToFile(directory);
             gameSaved = !gameSaved;
             updateSaveGameButtons();
@@ -350,7 +344,7 @@ public class Game extends AppCompatActivity {
                 String gameName = gameFragment.getGameName();
                 ArrayList<String> gameLog = gameFragment.getGameLog();
                 if (gameName != null) {
-                    File gameLogFile = new File(getFilesDir() + "/logGames/" + gameName + "-Logs");
+                    File gameLogFile = new File(getFilesDir() + "/logGames/log/" + gameName + "-Logs");
                     BufferedWriter bufferedWriter;
                     if (gameLogFile.exists()) {
                         bufferedWriter = new BufferedWriter(new FileWriter(gameLogFile, true));

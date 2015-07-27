@@ -27,7 +27,7 @@ public class LoadGame extends ListActivity {
         logGames is the directory in where the files are stored. Everything before the the default private
         storage for the app
      */
-    private static final String FILE_LOCATION = "data/data/com.lawrenceqiu.scorekeeper.app/files/logGames";
+    private static final String FILE_DIRECTORY = "/logGames";
 
     private ArrayList<String> fileNames;
     private GameAdapter gameAdapter;
@@ -43,7 +43,7 @@ public class LoadGame extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.load_game);
 
-        fileNames = getListFiles(new File(FILE_LOCATION));
+        fileNames = getListFiles(new File(getFilesDir() + FILE_DIRECTORY));
         gameAdapter = new GameAdapter(getApplicationContext(), fileNames);
         setListAdapter(gameAdapter);
 
@@ -65,7 +65,9 @@ public class LoadGame extends ListActivity {
         ArrayList<String> fileNames = new ArrayList<>();
         if (files != null) {
             for (File file : files) {
-                fileNames.add(file.getName());
+                if (!file.getName().contains("log")) {
+                    fileNames.add(file.getName());
+                }
             }
         }
         return fileNames;
@@ -92,7 +94,8 @@ public class LoadGame extends ListActivity {
             Intent loadSavedGame = new Intent(getApplicationContext(), Game.class);
             ObjectInputStream inputStream = null;
             try {
-                inputStream = new ObjectInputStream(new FileInputStream(new File(FILE_LOCATION + "/" + fileNames.get(position))));
+                inputStream = new ObjectInputStream(new FileInputStream(new File(getFilesDir() + FILE_DIRECTORY
+                        + "/" + fileNames.get(position))));
                 int numPlayers = inputStream.readInt();
                 Player player;
                 for (int i = 0; i < numPlayers; i++) {      //If original ArrayList goes from 0-15 (size:16), this goes from 1-15
@@ -136,7 +139,7 @@ public class LoadGame extends ListActivity {
                     .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            File file = new File(FILE_LOCATION + "/" + fileNames.get(position));
+                            File file = new File(getFilesDir() + FILE_DIRECTORY + "/" + fileNames.get(position));
                             file.delete();
                             fileNames.remove(position);
                             gameAdapter.notifyDataSetChanged();
@@ -171,7 +174,7 @@ public class LoadGame extends ListActivity {
                     .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            File[] files = new File(FILE_LOCATION).listFiles();
+                            File[] files = new File(getFilesDir() + FILE_DIRECTORY).listFiles();
                             if (files.length == 0) {
                                 Toast.makeText(getApplicationContext(), R.string.no_files_error, Toast.LENGTH_SHORT).show();
                             } else {
