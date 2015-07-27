@@ -31,48 +31,6 @@ public class LoadGame extends ListActivity {
 
     private ArrayList<String> fileNames;
     private GameAdapter gameAdapter;
-
-    /**
-     * Sets up the arrayAdapter for the list and sets up functionality for clicking on the items
-     * Gets the list of fileNames
-     *
-     * @param savedInstanceState Bundle of data
-     */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.load_game);
-
-        fileNames = getListFiles(new File(getFilesDir() + FILE_DIRECTORY));
-        gameAdapter = new GameAdapter(getApplicationContext(), fileNames);
-        setListAdapter(gameAdapter);
-
-        getListView().setOnItemClickListener(itemClickListener);
-        getListView().setOnItemLongClickListener(itemLongClickListener);
-
-        Button deleteAll = (Button) findViewById(R.id.deleteAllFiles);
-        deleteAll.setOnClickListener(deleteAllListener);
-    }
-
-    /**
-     * Gets all the files in the list directory and adds them to the ArrayList to store
-     *
-     * @param directory Directory where files are stored
-     * @return ArrayList of files
-     */
-    private ArrayList<String> getListFiles(File directory) {
-        File[] files = directory.listFiles();
-        ArrayList<String> fileNames = new ArrayList<>();
-        if (files != null) {
-            for (File file : files) {
-                if (!file.getName().contains("log")) {
-                    fileNames.add(file.getName());
-                }
-            }
-        }
-        return fileNames;
-    }
-
     /**
      * Sets up the game by loading the data and sending it off to an intent that loads the Game class
      */
@@ -118,7 +76,6 @@ public class LoadGame extends ListActivity {
             startActivity(loadSavedGame);
         }
     };
-
     /**
      * Handles when a user long clicks on the loaded game. It gets the fileName and pops up and
      * alertDialog to confirm with the user that they really want to delete the game file
@@ -149,7 +106,6 @@ public class LoadGame extends ListActivity {
             return true;
         }
     };
-
     /**
      * Handles when the user opts for the bottom on the bottom ('Delete all the files in the list')
      * Asks the user to confirm their action of deleting all the files
@@ -190,4 +146,45 @@ public class LoadGame extends ListActivity {
             builder.create().show();
         }
     };
+
+    /**
+     * Sets up the arrayAdapter for the list and sets up functionality for clicking on the items
+     * Gets the list of fileNames
+     *
+     * @param savedInstanceState Bundle of data
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.load_game);
+
+        fileNames = getListFiles(new File(getFilesDir() + FILE_DIRECTORY));
+        gameAdapter = new GameAdapter(getApplicationContext(), fileNames);
+        setListAdapter(gameAdapter);
+
+        getListView().setOnItemClickListener(itemClickListener);
+        getListView().setOnItemLongClickListener(itemLongClickListener);
+
+        Button deleteAll = (Button) findViewById(R.id.deleteAllFiles);
+        deleteAll.setOnClickListener(deleteAllListener);
+    }
+
+    /**
+     * Gets all the files in the list directory and adds them to the ArrayList to store
+     *
+     * @param directory Directory where files are stored
+     * @return ArrayList of files
+     */
+    private ArrayList<String> getListFiles(File directory) {
+        File[] files = directory.listFiles();
+        ArrayList<String> fileNames = new ArrayList<>();
+        if (files != null) {
+            for (File file : files) {
+                if (!file.getName().contains("log")) {
+                    fileNames.add(file.getName());
+                }
+            }
+        }
+        return fileNames;
+    }
 }

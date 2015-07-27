@@ -203,7 +203,7 @@ public class GameFragment extends ListFragment {
     /**
      * Initializes the players names to be a default of an empty list and sets the array adapter to the PlayerAdapter
      * class
-     *
+     * <p>
      * Default sets the playerLimit to 0, regardless if there is a limit set or not
      *
      * @param activity Game activity
@@ -318,6 +318,7 @@ public class GameFragment extends ListFragment {
 
     /**
      * Sets a limit on the number of players
+     *
      * @param limit If there is a limit or not
      */
     public void setLimit(boolean limit) {

@@ -149,7 +149,7 @@ public class Player implements Serializable, Parcelable {
     /**
      * Writes out the name and score
      *
-     * @param dest Parcel destination
+     * @param dest  Parcel destination
      * @param flags Flag
      */
     @Override

@@ -24,7 +24,8 @@ public class GameAdapter extends BaseAdapter implements ListAdapter {
 
     /**
      * Initiates the context and names of the files
-     * @param context Conext
+     *
+     * @param context   Conext
      * @param fileNames ArrayList of fileNames
      */
     public GameAdapter(Context context, ArrayList<String> fileNames) {

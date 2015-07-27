@@ -90,11 +90,11 @@ public class PlayerAdapter extends BaseAdapter implements ListAdapter {
         }
 
         //Gets the Textview and updates the name, position, and score
-        TextView listItemText = (TextView)convertView.findViewById(R.id.playerNames);
+        TextView listItemText = (TextView) convertView.findViewById(R.id.playerNames);
         listItemText.setText("#" + (position + 1) + "- " + names.get(position).getName() + ": " + names.get(position).getScore());
 
-        Button addPoint = (Button)convertView.findViewById(R.id.addPoint);
-        Button subtractPoint = (Button)convertView.findViewById(R.id.subtractPoint);
+        Button addPoint = (Button) convertView.findViewById(R.id.addPoint);
+        Button subtractPoint = (Button) convertView.findViewById(R.id.subtractPoint);
 
         //The add point button increases the score by 1 and updates the list
         addPoint.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +106,7 @@ public class PlayerAdapter extends BaseAdapter implements ListAdapter {
         });
 
         //The subtract button decreases the score by 1 and updates the list
-        subtractPoint.setOnClickListener(new View.OnClickListener(){
+        subtractPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 names.get(position).subtractPoint();
